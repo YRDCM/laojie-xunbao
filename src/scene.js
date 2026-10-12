@@ -3,9 +3,13 @@
 // ============================================================
 import { SCENE_DRAWERS, ITEM_DRAWERS } from './painter.js'
 
-// 绘制整关画面：先画场景装饰，再叠加混入其中的目标物品
+// 绘制整关画面：先画场景装饰，再画干扰物（点了算错），最后叠加目标物品
 export function drawScene(ctx, level) {
   SCENE_DRAWERS[level.scene](ctx, level.palette)
+  // 干扰物与目标混排，视觉上无区别，增加难度
+  for (const d of level.decoys || []) {
+    ITEM_DRAWERS[d.draw](ctx, d.x, d.y, d.r)
+  }
   for (const t of level.targets) {
     ITEM_DRAWERS[t.draw](ctx, t.x, t.y, t.r)
   }

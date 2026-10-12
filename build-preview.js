@@ -15,18 +15,29 @@ const ORDER = [
   'src/painter.js',
   'src/scene.js',
   'src/ui.js',
+  'src/audio.js',
   'src/share.js',
   'src/main.js'
 ]
 
-// 剥离 ESM 语法：删 import/export{} 行，export 声明降级为普通声明
+// 剥离 ESM 语法：删 import/export{} 行（含多行 import），export 声明降级为普通声明
 function strip(code) {
-  return code.split('\n').map(line => {
+  const out = []
+  let inImport = false // 多行 import 块内
+  for (const line of code.split('\n')) {
     const t = line.trim()
-    if (t.startsWith('import ')) return ''
-    if (t.startsWith('export {')) return ''
-    return line.replace(/^export\s+(?=(const|let|var|function|class)\b)/, '')
-  }).join('\n')
+    if (inImport) {
+      if (t.includes(' from ') || t.endsWith('.js\'') || t.endsWith('.js"')) inImport = false
+      continue
+    }
+    if (t.startsWith('import ')) {
+      if (!t.includes(' from ')) inImport = true // import { ... 跨行
+      continue
+    }
+    if (t.startsWith('export {')) continue
+    out.push(line.replace(/^export\s+(?=(const|let|var|function|class)\b)/, ''))
+  }
+  return out.join('\n')
 }
 
 const bundle = ORDER.map(f =>

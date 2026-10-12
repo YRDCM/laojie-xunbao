@@ -310,6 +310,97 @@ export const ITEM_DRAWERS = {
     ctx.moveTo(x - r * 0.18, y - r * 0.3); ctx.lineTo(x + r * 0.18, y - r * 0.3)
     ctx.moveTo(x - r * 0.18, y + r * 0.3); ctx.lineTo(x + r * 0.18, y + r * 0.3)
     ctx.stroke()
+  },
+
+  // 酱坛（菜市场，难度 2 新增目标）
+  sauceJar(ctx, x, y, r) {
+    // 坛身（上窄下宽的陶坛）
+    ctx.beginPath()
+    ctx.moveTo(x - r * 0.4, y - r * 0.55)
+    ctx.quadraticCurveTo(x - r * 0.85, y, x - r * 0.62, y + r * 0.72)
+    ctx.lineTo(x + r * 0.62, y + r * 0.72)
+    ctx.quadraticCurveTo(x + r * 0.85, y, x + r * 0.4, y - r * 0.55)
+    ctx.closePath()
+    ctx.fillStyle = '#6B4226'; ctx.fill()
+    ctx.lineWidth = 2; ctx.strokeStyle = '#452A18'; ctx.stroke()
+    // 布盖与扎绳
+    ell(ctx, x, y - r * 0.58, r * 0.5, r * 0.2)
+    ctx.fillStyle = '#B3382C'; ctx.fill()
+    ctx.strokeStyle = '#7A2A20'; ctx.stroke()
+    ctx.strokeStyle = '#E2B34C'; ctx.lineWidth = 2.5
+    ctx.beginPath(); ctx.moveTo(x - r * 0.44, y - r * 0.4); ctx.lineTo(x + r * 0.44, y - r * 0.4); ctx.stroke()
+    // 红纸签
+    rr(ctx, x - r * 0.2, y - r * 0.05, r * 0.4, r * 0.5, 2)
+    ctx.fillStyle = '#B3382C'; ctx.fill()
+    ctx.fillStyle = '#F5E9D0'
+    ctx.font = `${Math.round(r * 0.34)}px sans-serif`
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+    ctx.fillText('酱', x, y + r * 0.2)
+  },
+
+  // 小闹钟（修表铺，难度 2 新增目标）
+  alarmClock(ctx, x, y, r) {
+    ctx.lineCap = 'round'
+    // 两只铃铛与锤
+    ctx.strokeStyle = '#8A6A1F'; ctx.lineWidth = r * 0.1
+    ctx.beginPath(); ctx.moveTo(x, y - r * 0.7); ctx.lineTo(x, y - r * 0.95); ctx.stroke()
+    ctx.beginPath(); ctx.arc(x, y - r, r * 0.08, 0, Math.PI * 2)
+    ctx.fillStyle = '#C9A227'; ctx.fill()
+    for (const s of [-1, 1]) {
+      ctx.save(); ctx.translate(x + s * r * 0.45, y - r * 0.72); ctx.rotate(s * 0.5)
+      ctx.beginPath(); ctx.arc(0, 0, r * 0.28, Math.PI, 0); ctx.closePath()
+      ctx.fillStyle = '#C9A227'; ctx.fill()
+      ctx.restore()
+    }
+    // 表体
+    ctx.beginPath(); ctx.arc(x, y, r * 0.78, 0, Math.PI * 2)
+    ctx.fillStyle = '#A63A2E'; ctx.fill()
+    ctx.lineWidth = 2.5; ctx.strokeStyle = '#7A2A20'; ctx.stroke()
+    ctx.beginPath(); ctx.arc(x, y, r * 0.6, 0, Math.PI * 2)
+    ctx.fillStyle = '#F6EFDD'; ctx.fill()
+    // 指针
+    ctx.strokeStyle = '#5A4028'; ctx.lineWidth = r * 0.08
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - r * 0.36); ctx.stroke()
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + r * 0.3, y + r * 0.12); ctx.stroke()
+    // 两只支脚
+    ctx.lineWidth = r * 0.09
+    ctx.beginPath(); ctx.moveTo(x - r * 0.4, y + r * 0.66); ctx.lineTo(x - r * 0.55, y + r * 0.95); ctx.stroke()
+    ctx.beginPath(); ctx.moveTo(x + r * 0.4, y + r * 0.66); ctx.lineTo(x + r * 0.55, y + r * 0.95); ctx.stroke()
+  },
+
+  // 香炉（中药房，难度 2 新增目标）
+  incenseBurner(ctx, x, y, r) {
+    // 三足炉身
+    ctx.beginPath()
+    ctx.moveTo(x - r * 0.62, y - r * 0.1)
+    ctx.quadraticCurveTo(x - r * 0.7, y + r * 0.55, x - r * 0.3, y + r * 0.62)
+    ctx.lineTo(x + r * 0.3, y + r * 0.62)
+    ctx.quadraticCurveTo(x + r * 0.7, y + r * 0.55, x + r * 0.62, y - r * 0.1)
+    ctx.closePath()
+    ctx.fillStyle = '#7A5A1F'; ctx.fill()
+    ctx.lineWidth = 2; ctx.strokeStyle = '#54401A'; ctx.stroke()
+    // 炉口沿与双耳
+    rr(ctx, x - r * 0.7, y - r * 0.26, r * 1.4, r * 0.2, r * 0.08)
+    ctx.fillStyle = '#8A6A1F'; ctx.fill()
+    ctx.lineWidth = 2; ctx.strokeStyle = '#54401A'; ctx.stroke()
+    for (const s of [-1, 1]) {
+      ctx.beginPath(); ctx.arc(x + s * r * 0.62, y - r * 0.36, r * 0.14, 0, Math.PI * 2)
+      ctx.strokeStyle = '#54401A'; ctx.lineWidth = r * 0.09; ctx.stroke()
+    }
+    // 三足
+    ctx.fillStyle = '#54401A'
+    for (const fx of [-0.4, 0, 0.4]) {
+      rr(ctx, x + fx * r - r * 0.07, y + r * 0.6, r * 0.14, r * 0.3, r * 0.05)
+      ctx.fill()
+    }
+    // 三缕青烟
+    ctx.strokeStyle = 'rgba(154,160,166,0.8)'; ctx.lineWidth = 2.5; ctx.lineCap = 'round'
+    for (const sx of [-0.25, 0, 0.25]) {
+      ctx.beginPath()
+      ctx.moveTo(x + sx * r, y - r * 0.3)
+      ctx.quadraticCurveTo(x + sx * r + r * 0.16, y - r * 0.55, x + sx * r, y - r * 0.78)
+      ctx.stroke()
+    }
   }
 }
 
@@ -556,4 +647,106 @@ export const SCENE_DRAWERS = {
     ctx.strokeStyle = '#8A6A3A'; ctx.lineWidth = 2
     ctx.beginPath(); ctx.moveTo(420, 1180); ctx.lineTo(510, 1180); ctx.stroke()
   }
+}
+
+// ------------------------------------------------------------
+// 主菜单背景：怀旧老街（屋檐剪影 + 红灯笼 + 店铺招牌）
+// ------------------------------------------------------------
+export function drawMenuScene(ctx) {
+  // 黄昏天空渐变
+  const sky = ctx.createLinearGradient(0, 0, 0, 900)
+  sky.addColorStop(0, '#3E2C4A')
+  sky.addColorStop(0.55, '#8A4A3A')
+  sky.addColorStop(1, '#D08A4A')
+  ctx.fillStyle = sky; ctx.fillRect(0, 0, 750, 900)
+  // 月亮
+  ctx.beginPath(); ctx.arc(620, 180, 56, 0, Math.PI * 2)
+  ctx.fillStyle = '#F5E9C8'; ctx.fill()
+  ctx.beginPath(); ctx.arc(596, 168, 48, 0, Math.PI * 2)
+  ctx.fillStyle = 'rgba(62,44,74,0.35)'; ctx.fill()
+  // 远山剪影
+  ctx.fillStyle = '#5A3A44'
+  ctx.beginPath()
+  ctx.moveTo(0, 560)
+  ctx.quadraticCurveTo(160, 430, 320, 540)
+  ctx.quadraticCurveTo(480, 640, 620, 520)
+  ctx.quadraticCurveTo(700, 470, 750, 530)
+  ctx.lineTo(750, 900); ctx.lineTo(0, 900)
+  ctx.closePath(); ctx.fill()
+  // 老街屋檐剪影（高低错落的坡屋顶）
+  ctx.fillStyle = '#2E1E16'
+  const roofs = [
+    [0, 700, 210, 620], [180, 730, 420, 650], [400, 690, 640, 610], [620, 720, 750, 640]
+  ]
+  for (const [x0, y0, x1, yt] of roofs) {
+    ctx.beginPath()
+    ctx.moveTo(x0 - 20, y0)
+    ctx.lineTo((x0 + x1) / 2, yt)
+    ctx.lineTo(x1 + 20, y0)
+    ctx.lineTo(x1 + 20, 900); ctx.lineTo(x0 - 20, 900)
+    ctx.closePath(); ctx.fill()
+  }
+  // 街道地面
+  const ground = ctx.createLinearGradient(0, 880, 0, 1334)
+  ground.addColorStop(0, '#4A3222')
+  ground.addColorStop(1, '#241A10')
+  ctx.fillStyle = ground; ctx.fillRect(0, 880, 750, 454)
+  // 石板路中线
+  ctx.strokeStyle = 'rgba(245,233,208,0.08)'; ctx.lineWidth = 3
+  for (let i = 0; i < 6; i++) {
+    const y = 920 + i * 70
+    ctx.beginPath(); ctx.moveTo(40, y); ctx.lineTo(710, y + 14); ctx.stroke()
+  }
+  // 屋檐下挂红灯笼（带光晕）
+  const lanterns = [[110, 700], [300, 730], [520, 690], [680, 720]]
+  for (const [lx, ly] of lanterns) {
+    const glow = ctx.createRadialGradient(lx, ly + 30, 6, lx, ly + 30, 70)
+    glow.addColorStop(0, 'rgba(226,88,60,0.5)')
+    glow.addColorStop(1, 'rgba(226,88,60,0)')
+    ctx.fillStyle = glow
+    ctx.beginPath(); ctx.arc(lx, ly + 30, 70, 0, Math.PI * 2); ctx.fill()
+    ctx.strokeStyle = '#1E140E'; ctx.lineWidth = 3
+    ctx.beginPath(); ctx.moveTo(lx, ly - 12); ctx.lineTo(lx, ly + 4); ctx.stroke()
+    ell(ctx, lx, ly + 34, 30, 36)
+    ctx.fillStyle = '#C0392B'; ctx.fill()
+    ctx.strokeStyle = '#8A2A20'; ctx.lineWidth = 2
+    for (const dx of [-14, 0, 14]) {
+      ctx.beginPath(); ctx.moveTo(lx + dx, ly + 4); ctx.quadraticCurveTo(lx + dx * 1.3, ly + 34, lx + dx, ly + 64); ctx.stroke()
+    }
+    ctx.fillStyle = '#E2B34C'
+    ctx.fillRect(lx - 12, ly, 24, 8)   // 上口
+    ctx.fillRect(lx - 10, ly + 62, 20, 8) // 下口
+    ctx.strokeStyle = '#E2B34C'; ctx.lineWidth = 2
+    ctx.beginPath(); ctx.moveTo(lx, ly + 70); ctx.lineTo(lx, ly + 88); ctx.stroke() // 穗子
+  }
+  // 两块竖招牌
+  for (const [sx, sy, txt] of [[48, 780, '老茶馆'], [640, 800, '杂货铺']]) {
+    rr(ctx, sx, sy, 56, 150, 6); ctx.fillStyle = '#5E3A17'; ctx.fill()
+    ctx.lineWidth = 3; ctx.strokeStyle = '#3A2412'; ctx.stroke()
+    ctx.fillStyle = '#E8D3A1'; ctx.font = '28px sans-serif'
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'
+    txt.split('').forEach((ch, i) => ctx.fillText(ch, sx + 28, sy + 36 + i * 42))
+  }
+}
+
+// 新手引导手指图标：食指下指 + 指尖涟漪圈
+export function drawFinger(ctx, x, y, s) {
+  ctx.save()
+  ctx.translate(x, y)
+  ctx.scale(s, s)
+  // 指尖涟漪圈
+  ctx.strokeStyle = 'rgba(255,213,74,0.9)'; ctx.lineWidth = 5
+  ctx.beginPath(); ctx.arc(0, 0, 34, 0, Math.PI * 2); ctx.stroke()
+  // 手掌（圆角矩形）+ 食指（长条）
+  rr(ctx, -30, -96, 60, 78, 24)
+  ctx.fillStyle = '#F2C894'; ctx.fill()
+  ctx.lineWidth = 4; ctx.strokeStyle = '#B07A4A'; ctx.stroke()
+  rr(ctx, -13, -22, 26, 46, 13)
+  ctx.fillStyle = '#F2C894'; ctx.fill()
+  ctx.stroke()
+  // 袖口
+  rr(ctx, -34, -124, 68, 30, 8)
+  ctx.fillStyle = '#3E5C4B'; ctx.fill()
+  ctx.strokeStyle = '#2A4034'; ctx.stroke()
+  ctx.restore()
 }

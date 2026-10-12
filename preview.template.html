@@ -22,9 +22,14 @@
              pixelRatio: window.devicePixelRatio || 1 }
   }
   function pt(e) { return { clientX: e.clientX, clientY: e.clientY } }
+  var canvasUsed = false
   window.wx = {
     getSystemInfoSync: info,
-    createCanvas: function () { return canvas }, // 首个 canvas 即游戏主画布
+    // 首个 canvas 即游戏主画布，之后为离屏画布（分享卡片图用）
+    createCanvas: function () {
+      if (!canvasUsed) { canvasUsed = true; return canvas }
+      return document.createElement('canvas')
+    },
     // 本地存档 → localStorage
     setStorageSync: function (k, v) { try { localStorage.setItem('lsxb_' + k, JSON.stringify(v)) } catch (e) {} },
     getStorageSync: function (k) { try { var v = localStorage.getItem('lsxb_' + k); return v === null ? '' : JSON.parse(v) } catch (e) { return '' } },
@@ -44,11 +49,29 @@
     showToast: function (o) { console.log('[toast]', o && o.title) },
     // 激励广告：浏览器直接抛错，走游戏内的演示模式降级
     createRewardedVideoAd: function () { throw new Error('浏览器无激励广告环境') },
-    // 音频 → 空实现（Demo 未用音效，预留接口）
+    // 插屏广告：浏览器直接抛错，游戏内静默降级
+    createInterstitialAd: function () { throw new Error('浏览器无插屏广告环境') },
+    // 音频 → HTMLAudio 降级（相对路径引用 assets/audio/，浏览器自动播放限制下静默失败）
     createInnerAudioContext: function () {
-      return { src: '', autoplay: false, obeyMuteSwitch: true,
-               play: function () {}, pause: function () {}, stop: function () {},
-               destroy: function () {}, onEnded: function () {}, onError: function () {} }
+      var audio = null
+      return {
+        src: '',
+        autoplay: false,
+        obeyMuteSwitch: true,
+        play: function () {
+          try {
+            if (!audio || audio._src !== this.src) { audio = new Audio(this.src); audio._src = this.src }
+            var p = audio.play()
+            if (p && p.catch) p.catch(function () {})
+          } catch (e) {}
+        },
+        pause: function () { try { if (audio) audio.pause() } catch (e) {} },
+        stop: function () { try { if (audio) { audio.pause(); audio.currentTime = 0 } } catch (e) {} },
+        seek: function () { try { if (audio) audio.currentTime = 0 } catch (e) {} },
+        destroy: function () { audio = null },
+        onEnded: function () {},
+        onError: function () {}
+      }
     },
     // 触控 → 鼠标 / 触屏事件
     onTouchStart: function (fn) { canvas.addEventListener('mousedown', function (e) { fn({ touches: [pt(e)], changedTouches: [pt(e)] }) }) },

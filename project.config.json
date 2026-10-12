@@ -1,0 +1,21 @@
+{
+  "appid": "wxfb0920d0d6a26ca4",
+  "compileType": "game",
+  "projectname": "老街寻宝",
+  "description": "老街寻宝：市井找物休闲小游戏 Demo（纯 Canvas 程序绘制，无图片资源）",
+  "libVersion": "3.8.12",
+  "setting": {
+    "es6": true,
+    "minified": true,
+    "postcss": true,
+    "urlCheck": false
+  },
+  "packOptions": {
+    "ignore": [
+      { "type": "file", "value": "preview.html" },
+      { "type": "file", "value": "preview.template.html" },
+      { "type": "file", "value": "build-preview.js" },
+      { "type": "file", "value": "README.md" }
+    ]
+  }
+}

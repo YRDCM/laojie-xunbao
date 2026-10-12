@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>老街寻宝 · 浏览器预览</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #241a10; overflow: hidden }
+  canvas { display: block; width: 100vw; height: 100vh; touch-action: none }
+</style>
+</head>
+<body>
+<canvas id="game"></canvas>
+<script>
+/* ============ wx API 浏览器降级 shim（仅浏览器预览用，微信环境不加载本文件） ============ */
+(function () {
+  var canvas = document.getElementById('game')
+  // 屏幕信息：直接取浏览器窗口
+  function info() {
+    return { screenWidth: window.innerWidth, screenHeight: window.innerHeight,
+             windowWidth: window.innerWidth, windowHeight: window.innerHeight,
+             pixelRatio: window.devicePixelRatio || 1 }
+  }
+  function pt(e) { return { clientX: e.clientX, clientY: e.clientY } }
+  window.wx = {
+    getSystemInfoSync: info,
+    createCanvas: function () { return canvas }, // 首个 canvas 即游戏主画布
+    // 本地存档 → localStorage
+    setStorageSync: function (k, v) { try { localStorage.setItem('lsxb_' + k, JSON.stringify(v)) } catch (e) {} },
+    getStorageSync: function (k) { try { var v = localStorage.getItem('lsxb_' + k); return v === null ? '' : JSON.parse(v) } catch (e) { return '' } },
+    removeStorageSync: function (k) { try { localStorage.removeItem('lsxb_' + k) } catch (e) {} },
+    // 分享：浏览器无分享能力，弹窗模拟
+    showShareMenu: function () {},
+    onShareAppMessage: function (fn) { this._shareFn = fn },
+    shareAppMessage: function (o) {
+      var t = (o && o.title) || (this._shareFn && this._shareFn().title) || '老街寻宝'
+      window.alert('【模拟分享】\n' + t)
+    },
+    // 弹窗 → confirm
+    showModal: function (o) {
+      var ok = window.confirm((o.title ? o.title + '\n\n' : '') + (o.content || ''))
+      if (o.success) o.success({ confirm: ok, cancel: !ok })
+    },
+    showToast: function (o) { console.log('[toast]', o && o.title) },
+    // 激励广告：浏览器直接抛错，走游戏内的演示模式降级
+    createRewardedVideoAd: function () { throw new Error('浏览器无激励广告环境') },
+    // 音频 → 空实现（Demo 未用音效，预留接口）
+    createInnerAudioContext: function () {
+      return { src: '', autoplay: false, obeyMuteSwitch: true,
+               play: function () {}, pause: function () {}, stop: function () {},
+               destroy: function () {}, onEnded: function () {}, onError: function () {} }
+    },
+    // 触控 → 鼠标 / 触屏事件
+    onTouchStart: function (fn) { canvas.addEventListener('mousedown', function (e) { fn({ touches: [pt(e)], changedTouches: [pt(e)] }) }) },
+    onTouchMove: function (fn) { canvas.addEventListener('mousemove', function (e) { if (e.buttons) fn({ touches: [pt(e)], changedTouches: [pt(e)] }) }) },
+    onTouchEnd: function (fn) {
+      canvas.addEventListener('mouseup', function (e) { fn({ touches: [], changedTouches: [pt(e)] }) })
+      canvas.addEventListener('touchend', function (e) { var t = e.changedTouches[0]; fn({ touches: [], changedTouches: [{ clientX: t.clientX, clientY: t.clientY }] }) })
+    },
+    triggerGC: function () {}
+  }
+})()
+</script>
+<script>
+/*__GAME_BUNDLE__*/
+</script>
+</body>
+</html>
